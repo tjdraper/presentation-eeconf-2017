@@ -1,0 +1,7 @@
+RewriteCond $1 !\.(gif|jpe?g|png|css|js|ico)$ [NC]
+RewriteCond %{REQUEST_METHOD} ^GET
+RewriteCond %{HTTP:ACT} !=^$
+RewriteCond %{QUERY_STRING} !^(css|ACT|URL|preview)
+RewriteCond %{DOCUMENT_ROOT}/cache/1/$2/index.html (.*\.(.*))$
+RewriteCond %1 -f
+RewriteRule ^(index.php/*)*(.*)(/*) /cache/1/$2/index.%2 [L]

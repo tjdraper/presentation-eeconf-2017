@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+    {!-- Reporting for duty --}
+    <title>My Webpage</title>
+
+    {!-- ...etc --}
+
+    {!-- Check for critical CSS, add it if it exists, otherwise just go with the stylesheet --}
+    {exp:readfilecontents:read
+        {if current_path == '/'}
+        path_to_file="criticalCss/style.min.css"
+        {if:else}
+        path_to_file="criticalCss/{current_path}/style.min.css"
+        {/if}
+    }
+        {if contents}
+            <style type="text/css">{contents}</style>
+        {if:else}
+            <link rel="stylesheet" href="/assets/css/style.min.css">
+        {/if}
+    {/exp:readfilecontents:read}
+</head>
+<body id="top">
+    {!-- ...header --}
+
+    {!-- Site main content --}
+    <main class="site-main-content">
+        {layout:contents}
+    </main>
+
+    {!-- ...footer --}
+
+    {!-- If we set criticalCSS above, include full stylesheet here, deferred to appease the page speed gods --}
+    {exp:readfilecontents:read
+        {if current_path == '/'}
+        path_to_file="criticalCss/style.min.css"
+        {if:else}
+        path_to_file="criticalCss/{current_path}/style.min.css"
+        {/if}
+    }
+        {if contents}
+            <noscript id="deferredStyles">
+                <link rel="stylesheet" href="/assets/css/style.min.css">
+            </noscript>
+            <script>
+                var loadDeferredStyles = function() {
+                    var addStylesNode = document.getElementById('deferredStyles');
+                    var replacement = document.createElement('div');
+                    replacement.innerHTML = addStylesNode.textContent;
+                    document.body.appendChild(replacement);
+                    addStylesNode.parentElement.removeChild(addStylesNode);
+                };
+
+                var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                    webkitRequestAnimationFrame || msRequestAnimationFrame;
+
+                if (raf) {
+                    raf(function() {
+                        window.setTimeout(loadDeferredStyles, 0);
+                    });
+                } else {
+                    window.addEventListener('load', loadDeferredStyles);
+                }
+            </script>
+        {/if}
+    {/exp:readfilecontents:read}
+</body>
+</html>
