@@ -3,7 +3,7 @@
 
     // Set first and last slides
     var firstSlide = 1;
-    var lastSlide = 84;
+    var lastSlide = 85;
 
     // Set slides director
     var dir = 'slides';
